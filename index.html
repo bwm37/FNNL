@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en" data-theme="midnight">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FNNL</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Local chart maker</p>
+        <h1>FNNL</h1>
+        <p class="hero-copy">Build smooth multi-variable funnel charts, add a graph title, switch between white and midnight modes, and export your finished chart as a PNG.</p>
+      </div>
+      <div class="hero-actions" aria-label="Primary actions">
+        <button type="button" id="sampleBtn" class="button secondary">Load screenshot sample</button>
+        <button type="button" id="exportPngBtn" class="button primary">Export PNG</button>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="preview-card" aria-labelledby="previewTitle">
+        <div class="preview-toolbar">
+          <div>
+            <p class="section-kicker">Live preview</p>
+            <h2 id="previewTitle">Funnel chart</h2>
+            <p id="summaryText" class="summary-text">Totals update as you edit the table.</p>
+          </div>
+          <div class="toolbar-controls">
+            <label for="exportScale">PNG size</label>
+            <select id="exportScale">
+              <option value="1">1280 × 720</option>
+              <option value="2" selected>2560 × 1440</option>
+              <option value="3">3840 × 2160</option>
+            </select>
+          </div>
+        </div>
+        <div class="chart-frame">
+          <svg id="chartSvg" viewBox="0 0 1280 720" role="img" aria-label="Funnel chart preview"></svg>
+        </div>
+      </section>
+
+      <aside class="controls-card" aria-label="Chart controls">
+        <section class="control-section">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">Setup</p>
+              <h2>Chart controls</h2>
+            </div>
+            <button type="button" id="clearValuesBtn" class="button ghost">Clear values</button>
+          </div>
+
+          <div class="control-grid">
+            <label class="field title-field">
+              <span>Graph title</span>
+              <input id="chartTitle" type="text" maxlength="90" placeholder="Optional title for this graph">
+            </label>
+            <label class="field">
+              <span>Stages</span>
+              <input id="stageCount" type="number" min="2" max="10" step="1" value="3">
+            </label>
+            <label class="field">
+              <span>Variables</span>
+              <input id="variableCount" type="number" min="1" max="10" step="1" value="3">
+            </label>
+            <label class="field">
+              <span>Theme</span>
+              <select id="themeSelect">
+                <option value="midnight">Midnight</option>
+                <option value="white">White</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Percent labels</span>
+              <select id="percentBasis">
+                <option value="first">Percent of first stage</option>
+                <option value="previous">Percent of previous stage</option>
+                <option value="none">Hide percentages</option>
+              </select>
+            </label>
+            <label class="field toggle-field">
+              <span>Date/time generated</span>
+              <span class="toggle-line">
+                <input id="showGeneratedAt" type="checkbox">
+                <span>Show in chart footer</span>
+              </span>
+            </label>
+            <label class="field range-field">
+              <span>Smoothing</span>
+              <input id="smoothing" type="range" min="0" max="0.65" step="0.05" value="0.45">
+            </label>
+          </div>
+        </section>
+
+        <section class="control-section">
+          <div class="section-heading compact">
+            <div>
+              <p class="section-kicker">Stages</p>
+              <h2>Stage labels</h2>
+            </div>
+          </div>
+          <div id="stageFields" class="stage-fields"></div>
+        </section>
+
+        <section class="control-section">
+          <details open>
+            <summary>
+              <span>
+                <span class="section-kicker">Data</span>
+                <strong>Variable values</strong>
+              </span>
+              <span class="summary-hint">Add, remove, and edit variable rows below.</span>
+            </summary>
+            <div class="variable-tools" aria-label="Variable controls">
+              <span id="variableCountText" class="variable-count-text">3 / 10 variables</span>
+              <div class="variable-tool-actions">
+                <button type="button" id="addVariableBtn" class="button secondary compact-button">Add variable</button>
+                <button type="button" id="removeVariableBtn" class="button ghost compact-button">Remove last</button>
+              </div>
+            </div>
+            <div class="table-wrap" role="region" aria-label="Data matrix" tabindex="0">
+              <table id="dataTable"></table>
+            </div>
+          </details>
+        </section>
+
+        <section class="control-section">
+          <details>
+            <summary>
+              <span>
+                <span class="section-kicker">CSV</span>
+                <strong>Import or export data</strong>
+              </span>
+              <span class="summary-hint">Use Variable, Color, then stage columns.</span>
+            </summary>
+            <p class="helper-text">Paste CSV with a header like <code>Variable,Color,Impressions,Add To Cart,Buy</code>. The Color column is optional.</p>
+            <textarea id="csvInput" rows="7" spellcheck="false" placeholder="Variable,Color,Impressions,Add To Cart,Buy&#10;Direct,#ff4ea3,3500,2500,650&#10;Social Media,#b38cff,2500,1200,120&#10;Ads,#84eff8,6500,2000,160"></textarea>
+            <div class="csv-actions">
+              <button type="button" id="importCsvBtn" class="button secondary">Import CSV</button>
+              <button type="button" id="copyCsvBtn" class="button ghost">Copy current CSV</button>
+              <button type="button" id="downloadCsvBtn" class="button ghost">Download CSV</button>
+            </div>
+          </details>
+        </section>
+
+        <p id="statusText" class="status-text" aria-live="polite"></p>
+      </aside>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
